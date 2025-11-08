@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <title>Insertar Usuario - Pollofest 7.0</title>
+</head>
+<body>
+    <header>
+        <img class="header-img1" src="{{ url_for('static', filename='img/2.png') }}" alt="">
+        <img class="header-img2" src="{{ url_for('static', filename='img/1.png') }}" alt="">
+    </header>
+    
+    <main>
+        <h1>Registrar Usuario</h1>
+        
+        <!-- Mostrar mensajes -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="message message-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('insertar_usuario') }}" method="POST">
+            <div class="container1">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required maxlength="20">
+                
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" required maxlength="20">
+                
+            </div>
+            <button type="submit">Registrar Usuario</button>
+        </form>
+        
+        <div class="back-section">
+            <a href="{{ url_for('admin') }}" class="btn-nav btn-volver">← Volver al Admin</a>
+            <a href="{{ url_for('logout') }}" class="btn-nav btn-cerrar">Cerrar Sesión</a>
+        </div>
+    </main>
+</body>
+</html>

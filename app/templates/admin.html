@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <title>Panel de Administrador - Pollofest 7.0</title>
+</head>
+
+<body>
+    <header>
+        <img class="header-img3" src="{{ url_for('static', filename='img/asistencia.png') }}"
+            alt="Panel de Administrador">
+    </header>
+    <main>
+
+        <h1>Panel de Administrador</h1>
+        
+        <!-- Mostrar mensajes -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="message message-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- Sección de verificación rápida -->
+        <div class="admin-section">
+            <h2>Verificación Rápida</h2>
+            <form class="form2" action="/verificar" method="post">
+                <small>Verificar código de usuario</small>
+                <input type="text" name="codigo" placeholder="Código de Preventa" required maxlength="12" autocomplete="off">
+                <button class="btn2" type="submit">Verificar</button>
+            </form>
+        </div>
+
+        <!-- Buscador de usuarios -->
+        <div class="admin-section">
+            <h2>Buscar Usuarios</h2>
+            
+            <form class="buscador-form" action="{{ url_for('admin') }}" method="get">
+                <div class="buscador-container">
+                    <input type="text" name="busqueda" placeholder="Buscar por nombre o apellido..." 
+                           value="{{ busqueda or '' }}" maxlength="50" autocomplete="off">
+                    <button type="submit" class="btn-buscar">🔍 Buscar</button>
+                    {% if busqueda %}
+                        <a href="{{ url_for('admin') }}" class="btn-limpiar">✖ Limpiar</a>
+                    {% endif %}
+                </div>
+            </form>
+            
+            <div class="mensaje-busqueda">
+                {{ mensaje_busqueda }}
+                {% if usuarios %}
+                    ({{ usuarios|length }} resultado{{ 's' if usuarios|length != 1 else '' }})
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Resultados de la búsqueda -->
+        {% if busqueda %}
+        <div class="admin-section">
+            
+            {% if usuarios %}
+            <div class="usuarios-grid">
+                {% for usuario in usuarios %}
+                <div class="usuario-card">
+                    <div class="usuario-info">
+                        <h3>{{ usuario[1] }} {{ usuario[2] }}</h3>
+                        <div class="codigo-usuario">Código: <span>{{ usuario[3] }}</span></div>
+                        <div class="estado-actual estado-{{ 'ya-paso' if usuario[4] == 2 else 'no-paso' }}">
+                            {% if usuario[4] == 2 %}
+                                Ya pasó
+                            {% else %}
+                                No ha pasado
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="acciones-usuario">
+                        <form method="POST" action="{{ url_for('admin_cambiar_estado', id_usuario=usuario[0]) }}">
+                            {% if usuario[4] == 1 %}
+                                <input type="hidden" name="nuevo_estado" value="Ya pasó">
+                                <button type="submit" class="btn-estado btn-marcar-paso">
+                                    ✓ Marcar como Ya pasó
+                                </button>
+                            {% else %}
+                                <input type="hidden" name="nuevo_estado" value="No ha pasado">
+                                <button type="submit" class="btn-estado btn-marcar-no-paso">
+                                    ↻ Marcar como No ha pasado
+                                </button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% elif busqueda %}
+            <div class="no-usuarios">
+                <p>No se encontraron usuarios con: "{{ busqueda }}"</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="back-section">
+            <a href="{{ url_for('logout') }}" class="btn-nav btn-cerrar">← Cerrar Sesión</a>
+            <a href="{{ url_for('mostrar_insertar') }}" class="btn-nav btn-insertar">+ Agregar Usuario</a>
+        </div>
+    </main>
+</body>
+
+</html>

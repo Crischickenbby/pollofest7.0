@@ -1,0 +1,12 @@
+# Variables de entorno para desarrollo local
+FLASK_ENV=development
+SECRET_KEY=tu-clave-secreta-super-segura-para-pollofest-2024
+
+# Base de datos local (para desarrollo)
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=tu_base_datos
+DB_USER=tu_usuario
+DB_PASSWORD=tu_contraseña
+
+# En producción, estas variables se configuran en la plataforma

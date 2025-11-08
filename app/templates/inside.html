@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <title>Verificación de Asistencia - Pollofest 7.0</title>
+</head>
+
+<body>
+    <header>
+        <img class="header-img3" src="{{ url_for('static', filename='img/asistencia.png') }}"
+            alt="Verificación de Asistencia">
+    </header>
+    <main>
+
+        <h1>Verificación de Asistencia</h1>
+        <!-- Mostrar mensajes -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="message message-{{ category }}">
+            {% if category == 'action' %}
+                {{ message|safe }}
+            {% else %}
+                {{ message }}
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form class="form2" action="/verificar" method="post">
+            <small>Recuerda también verificar el nombre de la persona</small>
+            <input type="text" name="codigo" placeholder="Código de Preventa" required maxlength="12"
+                autocomplete="off">
+            <button class="btn2" type="submit">Verificar</button>
+        </form>
+
+        <div class="back-section">
+            <a href="{{ url_for('logout') }}">← Cerrar Sesión</a>
+        </div>
+    </main>
+</body>
+
+</html>
