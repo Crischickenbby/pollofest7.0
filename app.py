@@ -42,6 +42,7 @@ def admin_required(f):
 
 @app.route('/')
 def home():
+    # Página principal de Pollofest 7.0
     return render_template('index.html')
 
 @app.route('/logout')
